@@ -18,3 +18,5 @@ dependencies:
   - click=8.1.7
   - scikit-image=0.22.0
   - matplotlib=3.8.4
+  - pip:
+      torcheval==0.0.7
