@@ -23,6 +23,6 @@ else
         yes | unzip fruits-360-original-size.zip && echo "Data successfully extracted into $data_dir"
     fi
 
-    cd fruit_preprocessing && python3 fruit_merger.py && cd .. && rm -rf $data_dir && rm -rf "$data_dir.zip"
+    cd preprocessing && python3 fruit_merger.py && cd .. && rm -rf $data_dir && rm -rf "$data_dir.zip"
 
 fi
