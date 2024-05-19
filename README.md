@@ -4,26 +4,15 @@
 
 ### Getting started
 
-**Create conda environment by running**
-
-```
-conda env create
-```
-
-**Activate the environment by running**
-
-```
-conda activate fruit_detection
-```
-
-**Pull data and merge different varieties of the same fruit
-into one class by running**
+**Create, activate conda environment, 
+  pull fruits data and merge different varieties of the same fruit
+into one class by running:**
 
 ```
 ./onboarding.sh
 ```
 
-**Preprocess the images by running**
+**Preprocess the images by running:**
 
 ```
 python fruit_preprocessing/fruit_processor.py
@@ -31,7 +20,7 @@ python fruit_preprocessing/fruit_processor.py
 
 ### Training the model
 
-**Train the model by running**
+**Train the model by running:**
 
 ```
 python fruit_preprocessing/fruit_processor.py
