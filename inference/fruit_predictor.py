@@ -50,7 +50,7 @@ class FruitPredictor:
     def index_to_fruit(self, tensor):
         return list(map(lambda index: self.index_to_fruit_mapping[int(index)], tensor))
 
-    def __process_image(self, image_path):
+    def __preprocess_image(self, image_path):
         image = process_image(io.imread(image_path), image_size=self.image_size)
         torch_image = torch.from_numpy(image)
         # Torch requires float and other permutation of dimensions
@@ -65,19 +65,34 @@ class FruitPredictor:
 
     def __model_outputs_from_paths(self, image_paths):
         # Concat image tensors into batch tensor
-        batch_tensor = torch.cat([self.__process_image(path) for path in image_paths], dim=0)
+        batch_tensor = torch.cat([self.__preprocess_image(path) for path in image_paths], dim=0)
         return self.__model_outputs_from_tensor(batch_tensor)
 
     def predict_from_paths(self, image_paths):
+        """
+        Predicts fruits in the images determined by passed image_paths list
+        :param image_paths: Iterable object consisting valid image paths
+        :return: predicted fruits list
+        """
         outputs = self.__model_outputs_from_paths(image_paths)
         _, predicted = torch.max(outputs, 1)
 
         return self.index_to_fruit(predicted)
 
     def predict_from_path(self, image_path):
-        return self.predict_from_paths([image_path])
+        """
+        Predicts fruits in the images determined by passed image_paths list
+        :param image_path: Valid image path 
+        :return: predicted fruit
+        """
+        return self.predict_from_paths([image_path])[0]
 
     def predict_from_tensor(self, tensor):
+        """
+        Predicts fruits in the images determined by passed images tensor
+        :param tensor: Expects 4-dimensional tensor with following structure: (batch_size, channels, width, height)
+        :return: predicted fruits list
+        """
         outputs = self.__model_outputs_from_tensor(tensor)
         _, predicted = torch.max(outputs, 1)
 
