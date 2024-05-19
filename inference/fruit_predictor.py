@@ -46,5 +46,5 @@ class FruitPredictor:
         return predicted
 
 
-fruitPredictor = FruitPredictor()
-print('Prediction:', fruitPredictor.predict('../fruits360_processed/Test/apple/6r0_3.jpg'))
+fruit_predictor = FruitPredictor()
+print('Prediction:', fruit_predictor.predict('../fruits360_processed/Test/apple/6r0_3.jpg'))
