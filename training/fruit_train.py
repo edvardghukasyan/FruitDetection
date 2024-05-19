@@ -11,8 +11,8 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from torchvision.models import ResNet18_Weights
 
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
-from fruit_data import FruitsDatamodule
-from fruit_training import FruitDetector
+from data import FruitsDatamodule
+from training import FruitDetector
 
 
 def get_network(num_classes: int):
