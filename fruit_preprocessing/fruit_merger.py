@@ -1,16 +1,13 @@
 import os
 import shutil
 
-import click
+import json
 from tqdm import tqdm
 
 
-@click.command()
-@click.option("--input_dir", default="../fruits360/fruits-360-original-size/fruits-360-original-size")
-@click.option("--output_dir", default="../fruits360_merged")
 def merge_fruits(
-    input_dir: str,
-    output_dir: str
+        input_dir: str,
+        output_dir: str
 ):
     for split in ["Training", "Validation", "Test"]:
         print(split)
@@ -27,4 +24,6 @@ def merge_fruits(
 
 
 if __name__ == "__main__":
-    merge_fruits()
+    with open(os.path.join(os.path.dirname(os.path.dirname(__file__)), "config.json"), "r") as config:
+        data_merge_config = json.load(config)["data_merge_config"]
+        merge_fruits(**data_merge_config)

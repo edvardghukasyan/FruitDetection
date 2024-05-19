@@ -11,5 +11,9 @@
     "input_dir": "../fruits360_merged",
     "output_dir": "../fruits360_processed",
     "image_size": 224
+  },
+  "data_merge_config": {
+    "input_dir": "../fruits-360-original-size",
+    "output_dir": "../fruits360_merged"
   }
 }
