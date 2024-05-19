@@ -1,6 +1,7 @@
 {
   "train_config": {
     "data_dir": "../fruits360_processed",
+    "mapping_path": "../fruit_to_index.pkl",
     "num_classes": 7,
     "batch_size": 8,
     "num_workers": 8,

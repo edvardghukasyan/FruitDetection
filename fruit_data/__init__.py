@@ -1,0 +1,1 @@
+from fruit_data.fruits_datamodule import FruitsDatamodule

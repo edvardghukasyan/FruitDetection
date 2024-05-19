@@ -1,0 +1,1 @@
+from fruit_algorithm import FruitDetector

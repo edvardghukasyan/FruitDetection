@@ -8,7 +8,7 @@ from tqdm import tqdm
 @click.command()
 @click.option("--input_dir", default="../fruits360/fruits-360-original-size/fruits-360-original-size")
 @click.option("--output_dir", default="../fruits360_merged")
-def merge(
+def merge_fruits(
     input_dir: str,
     output_dir: str
 ):
@@ -27,4 +27,4 @@ def merge(
 
 
 if __name__ == "__main__":
-    merge()
+    merge_fruits()

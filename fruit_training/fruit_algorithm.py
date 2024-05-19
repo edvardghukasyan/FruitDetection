@@ -38,7 +38,7 @@ class FruitDetector(pl.LightningModule):
     def configure_optimizers(self) -> OptimizerLRScheduler:
         return Adam(filter(lambda p: p.requires_grad, self.parameters()))
     
-    def _step(self, batch, split: str):
+    def _step(self, batch):
         input_image, label = batch
         pred = self._network(input_image)
         loss = self._loss(pred, nn.functional.one_hot(label, num_classes=self._num_classes).to(torch.float16))
@@ -52,13 +52,13 @@ class FruitDetector(pl.LightningModule):
         return dict(loss=loss, f1=f1, accuracy=accuracy)
     
     def training_step(self, batch, *args: Any, **kwargs: Any) -> STEP_OUTPUT:
-        return self._step(batch, split="train")
+        return self._step(batch)
     
     def validation_step(self, batch, *args: Any, **kwargs: Any) -> STEP_OUTPUT:
-        return self._step(batch, split="val")
+        return self._step(batch)
     
     def test_step(self, batch, *args: Any, **kwargs: Any) -> STEP_OUTPUT:
-        return self._step(batch, split="test")
+        return self._step(batch)
     
     def on_train_batch_end(self, outputs: STEP_OUTPUT, batch: Any, batch_idx: int) -> None:
         for metric_name, metric_values in outputs.items():

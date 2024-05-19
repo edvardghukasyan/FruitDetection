@@ -1,6 +1,8 @@
+import json
+import os.path
+import sys
 from datetime import datetime
 
-import json
 import torch.nn as nn
 import torchvision.models as models
 from pytorch_lightning import Trainer
@@ -8,26 +10,31 @@ from pytorch_lightning.callbacks import ModelCheckpoint, RichProgressBar
 from pytorch_lightning.loggers import TensorBoardLogger
 from torchvision.models import ResNet18_Weights
 
-from algorithm import FruitDetector
-from datamodule import FruitsDatamodule
+sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
+from fruit_data import FruitsDatamodule
+from fruit_training import FruitDetector
 
 
 def get_network(num_classes: int):
     resnet18 = models.resnet18(weights=ResNet18_Weights.IMAGENET1K_V1)
-
+    
     for param in resnet18.parameters():
         param.requires_grad = False
-
+    
     resnet18.fc = nn.Linear(resnet18.fc.in_features, num_classes)
-
+    resnet18.add_module("softmax", nn.Softmax())
+    
     return resnet18
 
 
-def train(data_dir: str, num_classes: int, batch_size: int, num_workers: int, num_epochs: int):
+def train(data_dir: str, mapping_path: str, num_classes: int, batch_size: int, num_workers: int, num_epochs: int):
     print("Creating the network")
     network = get_network(num_classes=num_classes)
     print("Creating the datamodule")
-    datamodule = FruitsDatamodule(batch_size=batch_size, num_workers=num_workers, data_dir=data_dir)
+    datamodule = FruitsDatamodule(
+        batch_size=batch_size, num_workers=num_workers,
+        data_dir=data_dir, mapping_path=mapping_path
+    )
     print("Creating the algorithm")
     algorithm = FruitDetector(num_classes=num_classes, network=network)
     print("Creating model checkpoint callback")
@@ -59,6 +66,6 @@ def train(data_dir: str, num_classes: int, batch_size: int, num_workers: int, nu
 
 
 if __name__ == "__main__":
-    with open('./config.json', 'r') as config:
-        train_config = json.load(config)['train_config']
+    with open(os.path.join(os.path.dirname(os.path.dirname(__file__)), "config.json"), "r") as config:
+        train_config = json.load(config)["train_config"]
         train(**train_config)

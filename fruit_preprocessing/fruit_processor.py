@@ -1,6 +1,6 @@
+import json
 import os
 
-import json
 import imageio
 import numpy as np
 from skimage import io
@@ -14,12 +14,12 @@ def pad_to_square(image: np.ndarray, fill_value: int = 255):
         pad_size = (img_size - image.shape[0]) // 2
         pad = fill_value * np.ones(shape=(pad_size, img_size, *image.shape[2:]), dtype=np.uint8)
         image = np.concatenate((pad, image, pad), axis=0)
-
+    
     elif img_size > image.shape[1]:
         pad_size = (img_size - image.shape[1]) // 2
         pad = fill_value * np.ones(shape=(img_size, pad_size, *image.shape[2:]), dtype=np.uint8)
         image = np.concatenate((pad, image, pad), axis=1)
-
+    
     return image
 
 
@@ -29,10 +29,10 @@ def process_image(image: np.ndarray, image_size: int):
     return image
 
 
-def process(
-        input_dir: str,
-        output_dir: str,
-        image_size: int
+def process_fruits(
+    input_dir: str,
+    output_dir: str,
+    image_size: int
 ):
     for split in ["Training", "Validation", "Test"]:
         print(split)
@@ -49,6 +49,6 @@ def process(
 
 
 if __name__ == "__main__":
-    with open('./config.json', 'r') as config:
-        process_config = json.load(config)['process_config']
-        process(**process_config)
+    with open(os.path.join(os.path.dirname(os.path.dirname(__file__)), "config.json"), "r") as config:
+        process_config = json.load(config)["process_config"]
+        process_fruits(**process_config)
