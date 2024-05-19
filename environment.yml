@@ -19,3 +19,4 @@ dependencies:
   - scikit-image=0.22.0
   - matplotlib=3.8.4
   - tensorboard=2.12.1
+  - rich=13.3.5
