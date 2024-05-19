@@ -1,5 +1,9 @@
 #!/bin/bash
 
+source /opt/anaconda3/etc/profile.d/conda.sh
+conda env create
+conda activate fruit_detection
+
 merged_data_dir="fruits360_merged"
 if [ -d "$merged_data_dir" ]; then
     echo "Merged data directory exists. Skipping data merge."
