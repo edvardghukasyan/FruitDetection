@@ -2,6 +2,7 @@ import sys
 import os
 import json
 import torch
+import pickle
 from skimage import io
 
 root = os.path.dirname(os.path.dirname(__file__))
@@ -25,6 +26,16 @@ class FruitPredictor:
         # Set the model to evaluation mode
         self.model.eval()
 
+    def __load_index_to_fruit_mapping(self):
+        mapping_path = os.path.join(root, 'model', 'fruit_to_index.pkl')
+        with open(mapping_path, 'rb') as file:
+            # Load fruit to index mapping
+            reverse_mapping = pickle.load(file)
+            # Create index to fruit mapping
+            self.index_to_fruit_mapping = {}
+            for k, v in reverse_mapping.items():
+                self.index_to_fruit_mapping[v] = k
+
     def __init__(self):
         config = FruitPredictor.__read_config()
         # Store image size for preprocessing
@@ -33,6 +44,11 @@ class FruitPredictor:
         num_classes = config["train_config"]['num_classes']
         # Load model and set model attribute
         self.__load_model(num_classes)
+        # Load and create index to fruit mapping
+        self.__load_index_to_fruit_mapping()
+
+    def index_to_fruit(self, tensor):
+        return list(map(lambda index: self.index_to_fruit_mapping[int(index)], tensor))
 
     def __process_image(self, image_path):
         image = process_image(io.imread(image_path), image_size=self.image_size)
@@ -42,18 +58,31 @@ class FruitPredictor:
         # Torch also requires batch size, so add one additional dimension
         return torch.unsqueeze(torch_image, 0)
 
-    def __model_outputs(self, image_path):
-        image = self.__process_image(image_path)
+    def __model_outputs_from_tensor(self, batch_tensor):
         # Make predictions
         with torch.no_grad():
-            return self.model.network(image)
+            return self.model.network(batch_tensor)
 
-    def predict(self, image_path):
-        outputs = self.__model_outputs(image_path)
+    def __model_outputs_from_paths(self, image_paths):
+        # Concat image tensors into batch tensor
+        batch_tensor = torch.cat([self.__process_image(path) for path in image_paths], dim=0)
+        return self.__model_outputs_from_tensor(batch_tensor)
+
+    def predict_from_paths(self, image_paths):
+        outputs = self.__model_outputs_from_paths(image_paths)
         _, predicted = torch.max(outputs, 1)
 
-        return predicted
+        return self.index_to_fruit(predicted)
+
+    def predict_from_path(self, image_path):
+        return self.predict_from_paths([image_path])
+
+    def predict_from_tensor(self, tensor):
+        outputs = self.__model_outputs_from_tensor(tensor)
+        _, predicted = torch.max(outputs, 1)
+
+        return self.index_to_fruit(predicted)
 
 
 fruit_predictor = FruitPredictor()
-print('Prediction:', fruit_predictor.predict('../fruits360_processed/Test/apple/6r0_3.jpg'))
+print('Prediction:', fruit_predictor.predict_from_path('../fruits360_processed/Test/apple/6r0_3.jpg'))
