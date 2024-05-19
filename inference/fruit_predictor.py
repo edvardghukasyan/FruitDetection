@@ -47,7 +47,7 @@ class FruitPredictor:
         # Load and create index to fruit mapping
         self.__load_index_to_fruit_mapping()
 
-    def index_to_fruit(self, tensor):
+    def __index_to_fruit(self, tensor):
         return list(map(lambda index: self.index_to_fruit_mapping[int(index)], tensor))
 
     def __preprocess_image(self, image_path):
@@ -77,7 +77,7 @@ class FruitPredictor:
         outputs = self.__model_outputs_from_paths(image_paths)
         _, predicted = torch.max(outputs, 1)
 
-        return self.index_to_fruit(predicted)
+        return self.__index_to_fruit(predicted)
 
     def predict_from_path(self, image_path):
         """
@@ -96,4 +96,4 @@ class FruitPredictor:
         outputs = self.__model_outputs_from_tensor(tensor)
         _, predicted = torch.max(outputs, 1)
 
-        return self.index_to_fruit(predicted)
+        return self.__index_to_fruit(predicted)
