@@ -1,6 +1,6 @@
 from datetime import datetime
 
-import click
+import json
 import torch.nn as nn
 import torchvision.models as models
 from pytorch_lightning import Trainer
@@ -14,21 +14,15 @@ from datamodule import FruitsDatamodule
 
 def get_network(num_classes: int):
     resnet18 = models.resnet18(weights=ResNet18_Weights.IMAGENET1K_V1)
-    
+
     for param in resnet18.parameters():
         param.requires_grad = False
-    
+
     resnet18.fc = nn.Linear(resnet18.fc.in_features, num_classes)
-    
+
     return resnet18
 
 
-@click.command()
-@click.option("--data_dir", default="../fruits360_processed")
-@click.option("--num_classes", default=7)
-@click.option("--batch_size", default=8)
-@click.option("--num_workers", default=8)
-@click.option("--num_epochs", default=5)
 def train(data_dir: str, num_classes: int, batch_size: int, num_workers: int, num_epochs: int):
     print("Creating the network")
     network = get_network(num_classes=num_classes)
@@ -65,4 +59,6 @@ def train(data_dir: str, num_classes: int, batch_size: int, num_workers: int, nu
 
 
 if __name__ == "__main__":
-    train()
+    with open('./config.json', 'r') as config:
+        config = json.load(config)
+        train(**config)
