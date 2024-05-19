@@ -2,11 +2,12 @@ import sys
 import os
 import json
 import torch
-from torchvision import transforms
-from PIL import Image
+import torch.nn.functional as F
+from skimage import io
 
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
 from training import FruitDetector, get_network
+from preprocessing import process_image
 
 
 class FruitPredictor:
@@ -16,23 +17,25 @@ class FruitPredictor:
         checkpoint_path = os.path.join(root, 'model', 'fruit_detection_model.ckpt')
         with open(os.path.join(os.path.dirname(os.path.dirname(__file__)), "config.json"), "r") as config:
             # Extract number of classes from config file
-            config = json.load(config)["train_config"]
-            num_classes = config['num_classes']
+            config = json.load(config)
+            num_classes = config["train_config"]['num_classes']
             # Get the network
             network = get_network(num_classes)
             # Load checkpoint into model
             self.model = FruitDetector.load_from_checkpoint(checkpoint_path, num_classes=num_classes, network=network)
+            self.image_size = config["preprocess_config"]['image_size']
         # Set the model to evaluation mode
         self.model.eval()
 
-    def predict_proba(self, image_path):
-        # Define the image transformations
-        preprocess = transforms.Compose([
-            transforms.ToTensor()
-        ])
+    def __read_image_tensor(self, image_path):
+        image = process_image(io.imread(image_path), image_size=self.image_size)
+        torch_image = torch.from_numpy(image)
+        # Torch requires float and other permutation of dimensions
+        return torch.permute(torch_image, (2, 0, 1)).float()
 
-        # Load and preprocess the image
-        image = preprocess(Image.open(image_path)).unsqueeze(0)
+    def predict_proba(self, image_path):
+        image = self.__read_image_tensor(image_path)
+        image = torch.unsqueeze(image, 0)
 
         # Make predictions
         with torch.no_grad():
@@ -41,7 +44,6 @@ class FruitPredictor:
     def predict(self, image_path):
         outputs = self.predict_proba(image_path)
         _, predicted = torch.max(outputs, 1)
-        print(predicted)
 
         return predicted
 
