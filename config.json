@@ -1,7 +1,14 @@
 {
-  "data_dir": "../fruits360_processed",
-  "num_classes": 7,
-  "batch_size": 8,
-  "num_workers": 8,
-  "num_epochs": 5
+  "train_config": {
+    "data_dir": "../fruits360_processed",
+    "num_classes": 7,
+    "batch_size": 8,
+    "num_workers": 8,
+    "num_epochs": 5
+  },
+  "process_config": {
+    "input_dir": "../fruits360_merged",
+    "output_dir": "../fruits360_processed",
+    "image_size": 224
+  }
 }

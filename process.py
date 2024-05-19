@@ -1,6 +1,6 @@
 import os
 
-import click
+import json
 import imageio
 import numpy as np
 from skimage import io
@@ -14,12 +14,12 @@ def pad_to_square(image: np.ndarray, fill_value: int = 255):
         pad_size = (img_size - image.shape[0]) // 2
         pad = fill_value * np.ones(shape=(pad_size, img_size, *image.shape[2:]), dtype=np.uint8)
         image = np.concatenate((pad, image, pad), axis=0)
-    
+
     elif img_size > image.shape[1]:
         pad_size = (img_size - image.shape[1]) // 2
         pad = fill_value * np.ones(shape=(img_size, pad_size, *image.shape[2:]), dtype=np.uint8)
         image = np.concatenate((pad, image, pad), axis=1)
-    
+
     return image
 
 
@@ -29,14 +29,10 @@ def process_image(image: np.ndarray, image_size: int):
     return image
 
 
-@click.command()
-@click.option("--input_dir", default="../fruits360_merged")
-@click.option("--output_dir", default="../fruits360_processed")
-@click.option("--image_size", default=224)
 def process(
-    input_dir: str,
-    output_dir: str,
-    image_size: int
+        input_dir: str,
+        output_dir: str,
+        image_size: int
 ):
     for split in ["Training", "Validation", "Test"]:
         print(split)
@@ -53,4 +49,6 @@ def process(
 
 
 if __name__ == "__main__":
-    process()
+    with open('./config.json', 'r') as config:
+        process_config = json.load(config)['process_config']
+        process(**process_config)

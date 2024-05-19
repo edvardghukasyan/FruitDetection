@@ -60,5 +60,5 @@ def train(data_dir: str, num_classes: int, batch_size: int, num_workers: int, nu
 
 if __name__ == "__main__":
     with open('./config.json', 'r') as config:
-        config = json.load(config)
-        train(**config)
+        train_config = json.load(config)['train_config']
+        train(**train_config)
