@@ -16,11 +16,11 @@ conda env create
 conda activate fruit_detection
 ```
 
-**Merge different varieties of the same fruit
+**Pull data and merge different varieties of the same fruit
 into one class by running**
 
 ```
-python fruit_preprocessing/fruit_merger.py
+./onboarding.sh
 ```
 
 **Preprocess the images by running**
