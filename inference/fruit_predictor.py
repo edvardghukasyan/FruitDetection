@@ -97,7 +97,3 @@ class FruitPredictor:
         _, predicted = torch.max(outputs, 1)
 
         return self.index_to_fruit(predicted)
-
-
-fruit_predictor = FruitPredictor()
-print('Prediction:', fruit_predictor.predict_from_path('../fruits360_processed/Test/apple/6r0_3.jpg'))
