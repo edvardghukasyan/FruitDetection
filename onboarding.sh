@@ -23,6 +23,16 @@ else
         yes | unzip fruits-360-original-size.zip && echo "Data successfully extracted into $data_dir"
     fi
 
+    echo "Starting data merging..."
     cd preprocessing && python3 fruit_merger.py && cd .. && rm -rf $data_dir && rm -rf "$data_dir.zip"
 
+fi
+
+preprocessed_data_dir="fruits360_processed"
+
+if [ -d "$preprocessed_data_dir" ]; then
+    echo "Preprocessed data directory exists. Skipping data preprocessing."
+else
+    echo "Starting data preprocessing..."
+    cd preprocessing && python3 fruit_processor.py && cd ..
 fi
