@@ -6,16 +6,10 @@
 
 **Create, activate conda environment, 
   pull fruits data and merge different varieties of the same fruit
-into one class by running:**
+into one class, preprocess the data by running:**
 
 ```
 ./onboarding.sh
-```
-
-**Preprocess the images by running:**
-
-```
-python fruit_preprocessing/fruit_processor.py
 ```
 
 ### Training the model
@@ -23,5 +17,5 @@ python fruit_preprocessing/fruit_processor.py
 **Train the model by running:**
 
 ```
-python fruit_preprocessing/fruit_processor.py
+python training/fruit_train.py
 ```
