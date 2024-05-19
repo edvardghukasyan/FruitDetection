@@ -4,11 +4,12 @@ import torch
 from torchvision import transforms
 from PIL import Image
 
-from algorithm import FruitDetector
-from train import get_network
+sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
+from training import FruitDetector, get_network
 
 # Get the Conda environment root directory
-checkpoint_path = os.path.join('..', 'model', 'fruit_detection_model.ckpt')
+root = os.path.dirname(os.path.dirname(__file__))
+checkpoint_path = os.path.join(root, 'model', 'fruit_detection_model.ckpt')
 
 model = FruitDetector.load_from_checkpoint(checkpoint_path, num_classes=7, network=get_network(7))
 model.eval()
@@ -19,7 +20,7 @@ preprocess = transforms.Compose([
 ])
 
 # Load and preprocess the image
-image_path = '../fruits-360-original-size/Test/apple_golden_3/r0_3.jpg'
+image_path = '../fruits360_processed/Test/apple/6r0_3.jpg'
 image = preprocess(Image.open(image_path)).unsqueeze(0)
 
 # Make predictions
