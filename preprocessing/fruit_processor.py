@@ -50,5 +50,5 @@ def process_fruits(
 
 if __name__ == "__main__":
     with open(os.path.join(os.path.dirname(os.path.dirname(__file__)), "config.json"), "r") as config:
-        process_config = json.load(config)["process_config"]
-        process_fruits(**process_config)
+        preprocess_config = json.load(config)["preprocess_config"]
+        process_fruits(**preprocess_config)
