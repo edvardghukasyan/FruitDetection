@@ -9,6 +9,7 @@ sys.path.append(os.path.abspath(root))
 from preprocessing import process_image
 
 
+@pytest.mark.small
 @pytest.mark.parametrize('dir_name', [
     'fruits360_merged',
     'fruits360_processed'
@@ -34,6 +35,7 @@ def random_numpy_image_input(request):
     return np.random.randn(*request.param, 3)
 
 
+@pytest.mark.small
 @pytest.mark.parametrize('image_size', [
     preprocess_config['image_size'],
     100
@@ -53,6 +55,7 @@ def ndarray_from_image_path(request):
     return io.imread(request.param)
 
 
+@pytest.mark.small
 @pytest.mark.parametrize('image_size', [
     preprocess_config['image_size'],
     100

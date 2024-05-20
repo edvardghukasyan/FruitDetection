@@ -9,6 +9,7 @@ sys.path.append(os.path.abspath(root))
 from inference import FruitPredictor
 
 
+@pytest.mark.medium
 @pytest.mark.parametrize('image_path', [
     os.path.join(root, 'fruits360_merged', 'Test', 'eggplant', 'violet_1r0_3.jpg'),
     os.path.join(root, 'fruits360_merged', 'Training', 'cucumber', '1r0_16.jpg'),
@@ -22,6 +23,7 @@ def test_fruit_predictor_preprocessing(image_path):
     assert image_tensor.shape == (1, 3, image_size, image_size)
 
 
+@pytest.mark.medium
 @pytest.mark.parametrize('image_path', [
     os.path.join(root, 'fruits360_merged', 'Test', 'eggplant', 'violet_1r0_3.jpg'),
     os.path.join(root, 'fruits360_merged', 'Training', 'cucumber', '1r0_16.jpg'),
@@ -33,6 +35,7 @@ def test_fruit_predict(image_path):
     assert fruit_predictor.predict_from_path(image_path) in fruits
 
 
+@pytest.mark.medium
 @pytest.mark.parametrize('image_path', [
     os.path.join(root, 'fruits360_merged', 'Test', 'eggplant', 'violet_1r0_3.jpg'),
     os.path.join(root, 'fruits360_merged', 'Training', 'cucumber', '1r0_16.jpg'),
@@ -47,6 +50,7 @@ def test_fruit_predict_same_inputs(image_path):
         assert prediction == predictions[0]
 
 
+@pytest.mark.medium
 def test_fruit_predict_multiple_inputs():
     image_paths = [
         os.path.join(root, 'fruits360_merged', 'Test', 'eggplant', 'violet_1r0_3.jpg'),
@@ -59,6 +63,7 @@ def test_fruit_predict_multiple_inputs():
         assert prediction in fruits
 
 
+@pytest.mark.medium
 def test_fruit_predict_random_tensor():
     fruit_predictor = FruitPredictor()
     image_size = preprocess_config['image_size']
@@ -70,6 +75,7 @@ def test_fruit_predict_random_tensor():
         assert prediction in fruits
 
 
+@pytest.mark.medium
 def test_fruit_predict_bad_input():
     fruit_predictor = FruitPredictor()
     image_size = preprocess_config['image_size']
@@ -97,6 +103,7 @@ def directory_image_files(request):
     return random.sample(image_paths, sample_size)
 
 
+@pytest.mark.large
 def test_fruit_predictions_for_the_directory(directory_image_files):
     fruit_predictor = FruitPredictor()
     predictions = fruit_predictor.predict_from_paths(directory_image_files)
