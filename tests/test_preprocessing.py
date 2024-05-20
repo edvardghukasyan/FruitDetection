@@ -1,12 +1,20 @@
 import os
+import sys
 import pytest
+from tests.utils import root, fruits
 
 
 @pytest.mark.parametrize("dir_name", [
     'fruits360_merged',
     'fruits360_processed'
 ])
-def test_required_directory_existence(dir_name):
-    root = os.path.dirname(os.path.dirname(__file__))
-    directory = os.path.join(root, dir_name)
+@pytest.mark.parametrize("phase", [
+    'Test',
+    'Training',
+    'Validation',
+    pytest.param('Verification', marks=pytest.mark.xfail)
+])
+@pytest.mark.parametrize("fruit", fruits)
+def test_data_existence(dir_name, phase, fruit):
+    directory = os.path.join(root, dir_name, phase, fruit)
     assert os.path.isdir(directory)
