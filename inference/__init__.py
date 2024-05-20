@@ -1,0 +1,1 @@
+from inference.fruit_predictor import FruitPredictor
