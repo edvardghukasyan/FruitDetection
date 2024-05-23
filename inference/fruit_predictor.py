@@ -84,6 +84,11 @@ class FruitPredictor:
     
     def __preprocess_image(self, image_path):
         image = process_image(io.imread(image_path), image_size=self.image_size)
+        # Check if the image has an alpha channel
+        if image.shape[-1] == 4:
+            # Discard the alpha channel
+            image = image[..., :3]
+
         torch_image = torch.from_numpy(image)
         # Torch requires float and other permutation of dimensions
         torch_image = torch.permute(torch_image, (2, 0, 1)).float() / 255
@@ -92,6 +97,7 @@ class FruitPredictor:
     
     def __model_outputs_from_tensor(self, batch_tensor):
         # Make predictions
+        print(batch_tensor.shape)
         with torch.no_grad():
             return self.model.network(batch_tensor)
     
