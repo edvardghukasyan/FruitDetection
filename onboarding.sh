@@ -18,13 +18,13 @@ else
             echo "Zip file does exist."
         else
             echo "Zip file does not exist. Downloading zipped data..."
-            curl -o "fruits-360-original-size.zip" "https://storage.googleapis.com/kaggle-data-sets/5857/2609027/compressed/fruits-360-original-size.zip?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=gcp-kaggle-com%40kaggle-161607.iam.gserviceaccount.com%2F20240519%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20240519T103228Z&X-Goog-Expires=259200&X-Goog-SignedHeaders=host&X-Goog-Signature=039e643a2dd07341f3fe2d2a7ea2cbf39feb6e79d4db9923ee8e291dc5b1feca1e67c729abbc16bb85101b4acba54bae44c0b57662f41a7c61fdd5ece1bc119594f455b80e5aa4bafc3f87ab5925235e0c47e8773d4870ce490a368918f63619c8adb397ab010c24ec4f1cdfe660d0adacae0e1b42a4d1656d1e28805e6b8c7e1cebe6881bf15a1844ab0c8322ca9ec5693a76fbaada50c265d34266060624e5f515f5d122013ec1e7e5a47b6122ebcad2b541fbcdbe1e8794cff80c892e8f335b57b66d00210cbb42eded1c1a394a529806b48cb3e0584e4a1cb21267f84098ac8dd835bb003a567b5258b2a7a45aa2575313da70ff0937c048e6e79cf7e8c2"
+            curl -o "fruits-360-original-size.zip" "https://storage.googleapis.com/kaggle-data-sets/5857/2609027/bundle/archive.zip?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=gcp-kaggle-com%40kaggle-161607.iam.gserviceaccount.com%2F20240523%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20240523T144154Z&X-Goog-Expires=259200&X-Goog-SignedHeaders=host&X-Goog-Signature=1b92039ef7a17349d999f58b5d26876018db7ea0f000c92daff8177fd6149eeffe178573ada0a90d6eadc0ccef1c7f936e8d939ac1908e20e63e84b6979e39296a61ca94bc2e82c2a6cd370679d78a3d1a0b453642b1f6ed57d1dc48eab10d8597b95da8e0798a946aa353e9f2f1311a9f262f448c807ae945546c8b99df3013a063d047940c8b4777697cd4f80160cd075cc22e9e7024d109526cc6dc6fcad6aadd9468217373c5f9975d1049ee97731e99a7a354b702ae6fe26cddcdd9d84b9de9706dfb79d2e20918aee7923465aa3778ae9983cdfc55894d393ac7ec95a40090e5dd84cd8f94ce94c2fac86c56b4237e7da5c6e951a368f18010adf949e8"
         fi
         yes | unzip fruits-360-original-size.zip && echo "Data successfully extracted into $data_dir"
     fi
 
     echo "Starting data merging..."
-    cd preprocessing && python3 fruit_merger.py && cd .. && rm -rf $data_dir && rm -rf "$data_dir.zip"
+    cd preprocessing && python3 fruit_merger.py && cd .. && rm -rf $data_dir && rm -rf "$data_dir.zip" && rm -rf fruits-360_dataset
 
 fi
 
