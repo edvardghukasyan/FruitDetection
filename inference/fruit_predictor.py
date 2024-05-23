@@ -1,8 +1,9 @@
-import sys
-import os
 import json
-import torch
+import os
 import pickle
+import sys
+
+import torch
 from skimage import io
 
 root = os.path.dirname(os.path.dirname(__file__))
@@ -12,6 +13,7 @@ from preprocessing import process_image
 
 
 class FruitPredictor:
+    
     def __init__(self):
         config = FruitPredictor.__read_config()
         # Store image size for preprocessing
@@ -22,7 +24,7 @@ class FruitPredictor:
         self.__load_model(num_classes)
         # Load and create index to fruit mapping
         self.__load_index_to_fruit_mapping()
-
+    
     def predict_from_paths(self, image_paths):
         """
         Predicts fruits in the images determined by passed image_paths list
@@ -31,9 +33,9 @@ class FruitPredictor:
         """
         outputs = self.__model_outputs_from_paths(image_paths)
         _, predicted = torch.max(outputs, 1)
-
+        
         return self.__index_to_fruit(predicted)
-
+    
     def predict_from_path(self, image_path):
         """
         Predicts fruits in the images determined by passed image_paths list
@@ -41,7 +43,7 @@ class FruitPredictor:
         :return: predicted fruit
         """
         return self.predict_from_paths([image_path])[0]
-
+    
     def predict_from_tensor(self, tensor):
         """
         Predicts fruits in the images determined by passed images tensor
@@ -50,14 +52,14 @@ class FruitPredictor:
         """
         outputs = self.__model_outputs_from_tensor(tensor)
         _, predicted = torch.max(outputs, 1)
-
+        
         return self.__index_to_fruit(predicted)
-
+    
     @staticmethod
     def __read_config():
         with open(os.path.join(root, "config.json"), "r") as config:
             return json.load(config)
-
+    
     def __load_model(self, num_classes):
         checkpoint_path = os.path.join(root, 'model', 'fruit_detection_model.ckpt')
         # Get the network
@@ -66,7 +68,7 @@ class FruitPredictor:
         self.model = FruitDetector.load_from_checkpoint(checkpoint_path, num_classes=num_classes, network=network)
         # Set the model to evaluation mode
         self.model.eval()
-
+    
     def __load_index_to_fruit_mapping(self):
         mapping_path = os.path.join(root, 'model', 'fruit_to_index.pkl')
         with open(mapping_path, 'rb') as file:
@@ -76,23 +78,23 @@ class FruitPredictor:
             self.index_to_fruit_mapping = {}
             for k, v in reverse_mapping.items():
                 self.index_to_fruit_mapping[v] = k
-
+    
     def __index_to_fruit(self, tensor):
         return list(map(lambda index: self.index_to_fruit_mapping[int(index)], tensor))
-
+    
     def __preprocess_image(self, image_path):
         image = process_image(io.imread(image_path), image_size=self.image_size)
         torch_image = torch.from_numpy(image)
         # Torch requires float and other permutation of dimensions
-        torch_image = torch.permute(torch_image, (2, 0, 1)).float()
+        torch_image = torch.permute(torch_image, (2, 0, 1)).float() / 255
         # Torch also requires batch size, so add one additional dimension
         return torch.unsqueeze(torch_image, 0)
-
+    
     def __model_outputs_from_tensor(self, batch_tensor):
         # Make predictions
         with torch.no_grad():
             return self.model.network(batch_tensor)
-
+    
     def __model_outputs_from_paths(self, image_paths):
         # Concat image tensors into batch tensor
         batch_tensor = torch.cat([self.__preprocess_image(path) for path in image_paths], dim=0)
