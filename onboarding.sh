@@ -24,7 +24,7 @@ else
     fi
 
     echo "Starting data merging..."
-    cd preprocessing && python3 fruit_merger.py && cd .. && rm -rf $data_dir && rm -rf "$data_dir.zip"
+    cd preprocessing && python3 fruit_merger.py && cd .. && rm -rf $data_dir && rm -rf "$data_dir.zip" && rm -rf fruits-360_dataset
 
 fi
 
