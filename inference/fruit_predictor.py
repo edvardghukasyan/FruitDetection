@@ -30,7 +30,8 @@ class FruitPredictor:
         :return: predicted fruits list
         """
         outputs = self.__model_outputs_from_paths(image_paths)
-        _, predicted = torch.max(outputs, 1)
+        outputs_softmax = torch.nn.Softmax(dim=1)(outputs)
+        _, predicted = torch.max(outputs_softmax, 1)
 
         return self.__index_to_fruit(predicted)
 
@@ -92,7 +93,6 @@ class FruitPredictor:
         # Make predictions
         with torch.no_grad():
             return self.model.network(batch_tensor)
-
     def __model_outputs_from_paths(self, image_paths):
         # Concat image tensors into batch tensor
         batch_tensor = torch.cat([self.__preprocess_image(path) for path in image_paths], dim=0)
