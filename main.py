@@ -31,7 +31,7 @@ The API provides two endpoints: one for retrieving model information and another
 - ![zucchini](https://via.placeholder.com/20/008000/FFFFFF?text=Z) zucchini
 
 ## Example Image
-<img src="http://127.0.0.1:8060/static/kargin.png" alt="Example Image" width="500">
+<img src="http://127.0.0.1:8000/static/kargin.jpeg" alt="Example Image" width="500">
 """
 
 app = FastAPI(
@@ -118,4 +118,4 @@ async def predict_multiple(files: List[UploadFile] = File(...)):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8060)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
