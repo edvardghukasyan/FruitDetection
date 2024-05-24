@@ -14,8 +14,8 @@ The API provides two endpoints: one for retrieving model information and another
 ## Model Information
 
 - **Algorithm**: Convolutional Neural Network (CNN)
-- **Version**: 1.0
-- **Training Date**: 2024-05-20
+- **Version**: 1.2
+- **Training Date**: 2024-05-10
 - **Dataset**: [Fruits-360 Dataset](https://www.kaggle.com/datasets/moltean/fruits)
 - **Dataset Paper**: [Fruits-360 dataset: new research directions](https://www.researchgate.net/publication/354535752_Fruits-360_dataset_new_research_directions)
 - **Related Research**: [Fruit recognition from images using deep learning](https://arxiv.org/abs/1712.00580)
