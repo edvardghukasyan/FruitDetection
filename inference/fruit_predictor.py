@@ -1,8 +1,9 @@
-import sys
-import os
 import json
-import torch
+import os
 import pickle
+import sys
+
+import torch
 from skimage import io
 
 root = os.path.dirname(os.path.dirname(__file__))
@@ -12,6 +13,7 @@ from preprocessing import process_image
 
 
 class FruitPredictor:
+
     def __init__(self):
         config = FruitPredictor.__read_config()
         # Store image size for preprocessing
@@ -30,8 +32,7 @@ class FruitPredictor:
         :return: predicted fruits list
         """
         outputs = self.__model_outputs_from_paths(image_paths)
-        outputs_softmax = torch.nn.Softmax(dim=1)(outputs)
-        _, predicted = torch.max(outputs_softmax, 1)
+        _, predicted = torch.max(outputs, 1)
 
         return self.__index_to_fruit(predicted)
 
@@ -83,9 +84,14 @@ class FruitPredictor:
 
     def __preprocess_image(self, image_path):
         image = process_image(io.imread(image_path), image_size=self.image_size)
+        # Check if the image has an alpha channel
+        if image.shape[-1] == 4:
+            # Discard the alpha channel
+            image = image[..., :3]
+
         torch_image = torch.from_numpy(image)
         # Torch requires float and other permutation of dimensions
-        torch_image = torch.permute(torch_image, (2, 0, 1)).float()
+        torch_image = torch.permute(torch_image, (2, 0, 1)).float() / 255
         # Torch also requires batch size, so add one additional dimension
         return torch.unsqueeze(torch_image, 0)
 
@@ -93,6 +99,7 @@ class FruitPredictor:
         # Make predictions
         with torch.no_grad():
             return self.model.network(batch_tensor)
+
     def __model_outputs_from_paths(self, image_paths):
         # Concat image tensors into batch tensor
         batch_tensor = torch.cat([self.__preprocess_image(path) for path in image_paths], dim=0)
