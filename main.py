@@ -30,13 +30,13 @@ The API provides two endpoints: one for retrieving model information and another
 - ![pear](https://via.placeholder.com/20/FFFF00/000000?text=P) pear
 - ![zucchini](https://via.placeholder.com/20/008000/FFFFFF?text=Z) zucchini
 
-## Example Image
-<img src="http://127.0.0.1:8000/static/kargin.jpeg" alt="Example Image" width="500">
+## Joke
+<img src="http://127.0.0.1:8000/static/kargin.jpeg" alt="Example Image" width="800">
 """
 
 app = FastAPI(
     title="Fruit Detection API",
-    description=description,
+    description=description, 
     version="1.0"
 )
 
